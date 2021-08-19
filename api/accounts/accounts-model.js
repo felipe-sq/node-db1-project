@@ -1,4 +1,4 @@
-const db = "../../data/db-config.js";
+const db = require('../../data/db-config.js');
 
 async function getAll() {
   // DO YOUR MAGIC
