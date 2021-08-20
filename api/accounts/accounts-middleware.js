@@ -20,16 +20,7 @@ exports.checkAccountPayload = (req, res, next) => {
   }
 }
 
-exports.checkAccountNameUnique = (req, res, next) => {
-  // DO YOUR MAGIC
-  if (req.body.name.trim() === req.params.name) {
-    return res.status(400).json({message: 'that name is taken'});
-  } else {
-    next();
-  }
-}
-
-exports.checkAccountId = async (req, res, next) => {
+exports.checkAccountNameUnique = async (req, res, next) => {
   // DO YOUR MAGIC
   try {
     const accountsArr = await db('accounts').where('name', req.body.name.trim()).first();
@@ -37,6 +28,21 @@ exports.checkAccountId = async (req, res, next) => {
       return res.status(400).json({message: 'that name is taken'});
     } else {
       next();
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
+exports.checkAccountId = async (req, res, next) => {
+  // DO YOUR MAGIC
+  try {
+    const account = await getById(req.params.id);
+    if (account) {
+      req.account = account;
+      next();
+    } else {
+      return res.status(404).json({message: 'account not found'});
     }
   } catch (err) {
     next(err);
